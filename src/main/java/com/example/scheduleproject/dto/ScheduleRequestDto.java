@@ -13,4 +13,6 @@ public class ScheduleRequestDto {
     private String password; // 비밀번호
     private LocalDateTime createdDate; //작성일
     private LocalDateTime modifiedDate; //수정일
+
+    private String confirmPW;
 }

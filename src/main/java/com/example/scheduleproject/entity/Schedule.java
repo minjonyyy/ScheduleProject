@@ -1,5 +1,6 @@
 package com.example.scheduleproject.entity;
 
+import com.example.scheduleproject.dto.ScheduleRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,4 +19,10 @@ public class Schedule {
     private LocalDateTime modifiedDate; //수정일
 
 
+    public void updateSchedule(ScheduleRequestDto dto) {
+        this.title = dto.getTitle();
+        this.task = dto.getTask();
+        this.username = dto.getUsername();
+        this.modifiedDate = LocalDateTime.now();
+    }
 }
