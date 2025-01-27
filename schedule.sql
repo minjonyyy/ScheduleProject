@@ -1,19 +1,20 @@
 use scheduleapp;
 
-CREATE TABLE Users (
-    user_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL
+CREATE TABLE users (
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255) UNIQUE
 );
 
-CREATE TABLE Schedules (
-
-    schedule_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
-    schedule TEXT NOT NULL,
-    password VARCHAR(20) NOT NULL,
+CREATE TABLE schedules (
+    schedule_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    task VARCHAR(200),
+    username VARCHAR(10),
+    user_email VARCHAR(255),
+    password VARCHAR(20),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE
-
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
