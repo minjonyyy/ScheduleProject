@@ -13,11 +13,10 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateScheduleRepo implements ScheduleRepo{
@@ -62,6 +61,25 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
     }
 
     @Override
+    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword) {
+        String sql = "select * from schedules where TRUE";
+        List<Object> params = new ArrayList<>();
+
+        if(filterDate != null) {
+            sql += " AND DATE(modified_at) <= ?";
+            params.add(java.sql.Date.valueOf(filterDate));
+        }
+
+        if(keyword != null) {
+            sql += " AND username = ?";
+            params.add(keyword);
+        }
+        sql += "order by modified_at desc";
+
+        return jdbcTemplate.query(sql, scheduleRowMapper(), params.toArray());
+    }
+
+    @Override
     public Optional<Schedule> findScheduleById(Long id) {
         List<Schedule> result = jdbcTemplate.query("select * from schedules where schedule_id=?", scheduleRowMapperV2(), id);
         return result.stream().findAny();
@@ -82,6 +100,8 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
     public int deleteScheduleById(Long id) {
         return jdbcTemplate.update("delete from schedules where schedule_id=?", id);
     }
+
+
 
     private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {

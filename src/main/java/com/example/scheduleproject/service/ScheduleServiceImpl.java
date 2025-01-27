@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +30,17 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule schedule = new Schedule(dto.getTitle(), dto.getTask(), dto.getUsername(), dto.getPassword(), LocalDateTime.now(), LocalDateTime.now());
 
         return scheduleRepo.saveSchedule(schedule);
-
-
     }
 
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
         List<ScheduleResponseDto> allSchedules = scheduleRepo.findAllSchedules();
         return allSchedules;
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword) {
+        return scheduleRepo.findSchedulesWithFilters(filterDate, keyword);
     }
 
     @Override
@@ -80,6 +84,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
 
     }
+
+
 
 
 }

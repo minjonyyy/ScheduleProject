@@ -4,10 +4,12 @@ import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 import com.example.scheduleproject.service.ScheduleService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +35,15 @@ public class scheduleController {
 
         return scheduleService.findAllSchedules();
     }
+
+    @GetMapping("/filter")
+    public List<ScheduleResponseDto> findSchedulesWithFilters(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate filterDate,
+            @RequestParam(required = false) String keyword
+    ){
+        return scheduleService.findSchedulesWithFilters(filterDate, keyword);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
