@@ -2,18 +2,20 @@ package com.example.scheduleproject.repository;
 
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -29,31 +31,66 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
 
     @Override
     public ScheduleResponseDto saveSchedule(Schedule schedule) {
-        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
-        jdbcInsert.withTableName("schedules").usingGeneratedKeyColumns("schedule_id");
+        try {
+            // 사용자가 이미 존재하는지 확인
+            String checkUserSql = "SELECT user_id FROM users WHERE user_email = ?";
 
-        schedule.setCreatedDate(LocalDateTime.now());
-        schedule.setModifiedDate(LocalDateTime.now());
+            Long existingUserId = null;
+            try {
+                existingUserId = jdbcTemplate.queryForObject(checkUserSql, Long.class, schedule.getUserEmail());
+            } catch (EmptyResultDataAccessException e) {
+                // 사용자 존재하지 않으면 새로운 사용자 생성 로직으로 넘어감
+                existingUserId = null;
+            }
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("title", schedule.getTitle());
-        parameters.put("task", schedule.getTask());
-        parameters.put("username", schedule.getUsername());
-        parameters.put("password", schedule.getPassword());
-        parameters.put("created_at", schedule.getCreatedDate());
-        parameters.put("modified_at", schedule.getModifiedDate());
+            // 사용자가 존재하지 않으면 users 테이블에 사용자 정보 삽입
+            if (existingUserId == null) {
+                String insertUserSql = "INSERT INTO users (user_name, user_email) VALUES (?, ?)";
+                KeyHolder keyHolder = new GeneratedKeyHolder();
+                jdbcTemplate.update(connection -> {
+                    PreparedStatement ps = connection.prepareStatement(insertUserSql, Statement.RETURN_GENERATED_KEYS);
+                    ps.setString(1, schedule.getUsername());
+                    ps.setString(2, schedule.getUserEmail());
+                    return ps;
+                }, keyHolder);
 
-        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+                // 사용자 ID 가져오기
+                existingUserId = keyHolder.getKey().longValue();
+            }
 
-        return new ScheduleResponseDto(
-                key.longValue(),
-                schedule.getTitle(),
-                schedule.getTask(),
-                schedule.getUsername(),
-                schedule.getCreatedDate(),
-                schedule.getModifiedDate()
-        );
+            // schedules 테이블에 일정 정보 저장
+            SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+            jdbcInsert.withTableName("schedules").usingGeneratedKeyColumns("schedule_id");
+
+            LocalDateTime now = LocalDateTime.now();
+            schedule.setCreatedDate(now);
+            schedule.setModifiedDate(now);
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("title", schedule.getTitle());
+            parameters.put("task", schedule.getTask());
+            parameters.put("username", schedule.getUsername());
+            parameters.put("user_email", schedule.getUserEmail());
+            parameters.put("created_at", schedule.getCreatedDate());
+            parameters.put("modified_at", schedule.getModifiedDate());
+            parameters.put("user_id", existingUserId);  // 외래키로 사용자 ID 추가
+            parameters.put("password", schedule.getPassword());
+
+            Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+
+            return new ScheduleResponseDto(
+                    key.longValue(),
+                    schedule.getTitle(),
+                    schedule.getTask(),
+                    schedule.getUsername(),
+                    schedule.getCreatedDate(),
+                    schedule.getModifiedDate()
+            );
+        } catch (DataAccessException e) {
+            throw new RuntimeException("DB 작업 중 오류 발생", e);
+        }
     }
+
 
     @Override
     public List<ScheduleResponseDto> findAllSchedules() {
@@ -127,6 +164,7 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
                         rs.getString("title"),
                         rs.getString("task"),
                         rs.getString("username"),
+                        rs.getString("userEmail"),
                         rs.getString("password"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getTimestamp("modified_at").toLocalDateTime()
