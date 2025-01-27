@@ -6,10 +6,12 @@ import com.example.scheduleproject.entity.Schedule;
 import com.example.scheduleproject.repository.ScheduleRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ScheduleServiceImpl implements ScheduleService {
@@ -26,7 +28,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule schedule = new Schedule(dto.getTitle(), dto.getTask(), dto.getUsername(), dto.getPassword(), LocalDateTime.now(), LocalDateTime.now());
 
-        return new ScheduleResponseDto(scheduleRepo.saveSchedule(schedule));
+        return scheduleRepo.saveSchedule(schedule);
 
 
     }
@@ -39,46 +41,43 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
-        Schedule schedule = scheduleRepo.findScheduleById(id);
-
-        if (schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
+        Schedule schedule = scheduleRepo.findScheduleByIdOrElseThrow(id);
 
         return new ScheduleResponseDto(schedule);
     }
 
-
+    @Transactional
     @Override
     public ScheduleResponseDto updateSchedule(Long id, String confirmPW, String title, String task, String username) {
-
-        Schedule schedule = scheduleRepo.findScheduleById(id);
-
-        if (schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
-
         if (task == null || username == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The title and content are required values.");
         }
 
-        if(confirmPW.equals(schedule.getPassword())) {
-            schedule.update(title, task, username);
-        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        Schedule existingSchedule = scheduleRepo.findScheduleByIdOrElseThrow(id);
 
-        return null;
+        if(confirmPW.equals(existingSchedule.getPassword())) {
+            int updatedRow = scheduleRepo.updateSchedule(id, title, task, username);
+            if (updatedRow == 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+            }
+        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
+
+        Schedule schedule = scheduleRepo.findScheduleByIdOrElseThrow(id);
+
+        return new ScheduleResponseDto(schedule);
     }
 
     @Override
     public void deleteScheduleById(Long id, String confirmPW) {
-        Schedule schedule = scheduleRepo.findScheduleById(id);
-        if (schedule == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
-        }
 
-        if(confirmPW.equals(schedule.getPassword())) {
-            scheduleRepo.deleteSchduleById(id);
-        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        Optional<Schedule> existingSchedule = scheduleRepo.findScheduleById(id);
+
+        if(confirmPW.equals(existingSchedule.get().getPassword())) {
+            int deletedRow = scheduleRepo.deleteScheduleById(id);
+            if (deletedRow == 0) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+            }
+        } else throw new ResponseStatusException(HttpStatus.FORBIDDEN, "비밀번호가 일치하지 않습니다.");
 
     }
 

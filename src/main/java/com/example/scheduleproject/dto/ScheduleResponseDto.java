@@ -1,11 +1,13 @@
 package com.example.scheduleproject.dto;
 
 import com.example.scheduleproject.entity.Schedule;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class ScheduleResponseDto {
 
     private Long scheduleId; // 일정의 고유 id

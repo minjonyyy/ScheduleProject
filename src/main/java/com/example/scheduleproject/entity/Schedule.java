@@ -8,15 +8,16 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @AllArgsConstructor
 public class Schedule {
     //할일, 작성자명, 비밀번호, 작성/수정일
-    @Setter
     private Long scheduleId; // 일정의 고유 id
     private String title; // 제목
     private String task; // 할 일 내용
     private String username; // 작성자 이름
     private String password; // 비밀번호
+
     private LocalDateTime createdDate; //작성일
     private LocalDateTime modifiedDate; //수정일
 
@@ -30,13 +31,12 @@ public class Schedule {
     }
 
 
-
-    public void updateSchedule(ScheduleRequestDto dto) {
-        this.title = dto.getTitle();
-        this.task = dto.getTask();
-        this.username = dto.getUsername();
-        this.modifiedDate = LocalDateTime.now();
-    }
+//    public void updateSchedule(ScheduleRequestDto dto) {
+//        this.title = dto.getTitle();
+//        this.task = dto.getTask();
+//        this.username = dto.getUsername();
+//        this.modifiedDate = LocalDateTime.now();
+//    }
 
     public void update(String title, String task, String username) {
         this.title = title;
