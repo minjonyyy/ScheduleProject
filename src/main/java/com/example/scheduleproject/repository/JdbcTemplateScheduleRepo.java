@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
+import java.math.BigInteger;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -98,7 +99,7 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword) {
+    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, BigInteger userId) {
         String sql = "select * from schedules where TRUE";
         List<Object> params = new ArrayList<>();
 
@@ -107,11 +108,11 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
             params.add(java.sql.Date.valueOf(filterDate));
         }
 
-        if(keyword != null) {
-            sql += " AND username = ?";
-            params.add(keyword);
+        if(userId != null) {
+            sql += " AND user_id = ?";
+            params.add(userId);
         }
-        sql += "order by modified_at desc";
+        sql += " order by modified_at desc";
 
         return jdbcTemplate.query(sql, scheduleRowMapper(), params.toArray());
     }

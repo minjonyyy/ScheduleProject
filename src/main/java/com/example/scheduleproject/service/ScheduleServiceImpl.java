@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,8 +40,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword) {
-        return scheduleRepo.findSchedulesWithFilters(filterDate, keyword);
+    public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, BigInteger userId) {
+        return scheduleRepo.findSchedulesWithFilters(filterDate, userId);
     }
 
     @Override

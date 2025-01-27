@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -39,9 +40,9 @@ public class scheduleController {
     @GetMapping("/filter")
     public List<ScheduleResponseDto> findSchedulesWithFilters(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate filterDate,
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) BigInteger userId
     ){
-        return scheduleService.findSchedulesWithFilters(filterDate, keyword);
+        return scheduleService.findSchedulesWithFilters(filterDate, userId);
     }
 
 

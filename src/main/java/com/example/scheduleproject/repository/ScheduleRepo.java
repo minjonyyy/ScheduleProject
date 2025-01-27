@@ -3,6 +3,7 @@ package com.example.scheduleproject.repository;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface ScheduleRepo {
 
     List<ScheduleResponseDto> findAllSchedules();
 
-    List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword);
+    List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, BigInteger userId);
 
     Optional<Schedule> findScheduleById(Long id);
 

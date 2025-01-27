@@ -3,6 +3,7 @@ package com.example.scheduleproject.service;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface ScheduleService {
 
     List<ScheduleResponseDto> findAllSchedules();
 
-    List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, String keyword);
+    List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, BigInteger userId);
 
     ScheduleResponseDto findScheduleById(Long id);
 
