@@ -72,7 +72,7 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
             parameters.put("title", schedule.getTitle());
             parameters.put("task", schedule.getTask());
             parameters.put("username", schedule.getUsername());
-            parameters.put("user_email", schedule.getUserEmail());
+            parameters.put("useremail", schedule.getUserEmail());
             parameters.put("created_at", schedule.getCreatedDate());
             parameters.put("modified_at", schedule.getModifiedDate());
             parameters.put("user_id", existingUserId);  // 외래키로 사용자 ID 추가
@@ -183,7 +183,7 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
                         rs.getString("title"),
                         rs.getString("task"),
                         rs.getString("username"),
-                        rs.getString("userEmail"),
+                        rs.getString("useremail"),
                         rs.getString("password"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getTimestamp("modified_at").toLocalDateTime()
