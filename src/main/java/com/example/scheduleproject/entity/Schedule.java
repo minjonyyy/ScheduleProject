@@ -33,18 +33,4 @@ public class Schedule {
         this.modifiedDate = LocalDateTime.now();
     }
 
-
-//    public void updateSchedule(ScheduleRequestDto dto) {
-//        this.title = dto.getTitle();
-//        this.task = dto.getTask();
-//        this.username = dto.getUsername();
-//        this.modifiedDate = LocalDateTime.now();
-//    }
-
-    public void update(String title, String task, String username) {
-        this.title = title;
-        this.task = task;
-        this.username = username;
-        this.modifiedDate = LocalDateTime.now();
-    }
 }
