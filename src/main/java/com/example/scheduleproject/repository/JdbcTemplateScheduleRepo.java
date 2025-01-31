@@ -1,5 +1,6 @@
 package com.example.scheduleproject.repository;
 
+import com.example.scheduleproject.dto.ScheduleListResponseDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 import org.springframework.dao.DataAccessException;
@@ -118,6 +119,23 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
     }
 
     @Override
+    public List<ScheduleListResponseDto> findScheduleWithPage(int pageNum, int pageSize) {
+        String countSql = "SELECT COUNT(*) FROM schedules"; // 일정 갯수 세기
+        int totalCount = jdbcTemplate.queryForObject(countSql, Integer.class);
+        if (totalCount == 0 || pageNum * pageSize >= totalCount){
+            return Collections.emptyList();
+        }
+
+        String sql = "SELECT * FROM schedules ORDER BY modified_at DESC LIMIT ? OFFSET ?";
+        List<Object> params = new ArrayList<>();
+        params.add(pageSize);
+        params.add(pageNum*pageSize);
+
+        return jdbcTemplate.query(sql, scheduleRowMapperV3(), params.toArray());
+
+    }
+
+    @Override
     public Optional<Schedule> findScheduleById(Long id) {
         List<Schedule> result = jdbcTemplate.query("select * from schedules where schedule_id=?", scheduleRowMapperV2(), id);
         return result.stream().findAny();
@@ -167,6 +185,21 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
                         rs.getString("username"),
                         rs.getString("userEmail"),
                         rs.getString("password"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("modified_at").toLocalDateTime()
+                );
+            }
+        };
+    }
+
+    private RowMapper<ScheduleListResponseDto> scheduleRowMapperV3(){
+        return new RowMapper<ScheduleListResponseDto>() {
+            @Override
+            public ScheduleListResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ScheduleListResponseDto(
+                        rs.getLong("schedule_id"),
+                        rs.getString("title"),
+                        rs.getString("username"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
                         rs.getTimestamp("modified_at").toLocalDateTime()
                 );

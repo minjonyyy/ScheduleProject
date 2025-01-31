@@ -1,5 +1,6 @@
 package com.example.scheduleproject.controller;
 
+import com.example.scheduleproject.dto.ScheduleListResponseDto;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
@@ -43,6 +44,14 @@ public class scheduleController {
             @RequestParam(required = false) BigInteger userId
     ){
         return scheduleService.findSchedulesWithFilters(filterDate, userId);
+    }
+
+    @GetMapping("/page")
+    public List<ScheduleListResponseDto> findSchedulesWithPage(
+            @RequestParam(defaultValue = "0") int pageNum,
+            @RequestParam(defaultValue = "5") int pageSize
+    ){
+        return scheduleService.findScheduleWithPage(pageNum, pageSize);
     }
 
 

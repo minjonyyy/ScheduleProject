@@ -1,5 +1,6 @@
 package com.example.scheduleproject.service;
 
+import com.example.scheduleproject.dto.ScheduleListResponseDto;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
@@ -42,6 +43,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public List<ScheduleResponseDto> findSchedulesWithFilters(LocalDate filterDate, BigInteger userId) {
         return scheduleRepo.findSchedulesWithFilters(filterDate, userId);
+    }
+
+    @Override
+    public List<ScheduleListResponseDto> findScheduleWithPage(int pageNum, int pageSize) {
+        return scheduleRepo.findScheduleWithPage(pageNum, pageSize);
     }
 
     @Override

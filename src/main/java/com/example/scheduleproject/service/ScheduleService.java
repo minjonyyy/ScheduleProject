@@ -1,5 +1,6 @@
 package com.example.scheduleproject.service;
 
+import com.example.scheduleproject.dto.ScheduleListResponseDto;
 import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 
@@ -21,4 +22,5 @@ public interface ScheduleService {
 
     void deleteScheduleById(Long id, String confirmPW);
 
+    List<ScheduleListResponseDto> findScheduleWithPage(int pageNum, int pageSize);
 }

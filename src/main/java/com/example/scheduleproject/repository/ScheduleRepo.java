@@ -1,5 +1,6 @@
 package com.example.scheduleproject.repository;
 
+import com.example.scheduleproject.dto.ScheduleListResponseDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 
@@ -25,4 +26,5 @@ public interface ScheduleRepo {
     int deleteScheduleById(Long id);
 
 
+    List<ScheduleListResponseDto> findScheduleWithPage(int pageNum, int pageSize);
 }
