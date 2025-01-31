@@ -9,6 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -76,5 +78,17 @@ public class scheduleController {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<String> handleResponseStatusException(ResponseStatusException e) {
+        if (e.getStatusCode() == HttpStatus.FORBIDDEN) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getReason());
+        }
+        if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getReason());
+        }
+        return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+    }
+
 
 }
