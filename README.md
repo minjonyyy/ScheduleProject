@@ -1,6 +1,6 @@
 # 🗓️일정 관리 앱 만들기
 
-### 🪄 [<일정 관리 앱 만들기> 트러블 슈팅]() 보러가기
+### 🪄 [<일정 관리 앱 만들기> 회고 및 이슈 해결](https://velog.io/@minjonyyy/Spring-%EC%97%90%EB%9F%AC-cannot-resolve-symbol-validation) 보러가기
 
 ## 📍필수 기능
 ### 단계별 요구사항
@@ -27,7 +27,7 @@
     - [ ]  각 일정의 고유 식별자(ID)를 자동으로 생성하여 관리
     - `createSchedule(@Valid @RequestBody ScheduleRequestDto dto)`
   
-      <img src="https://github.com/user-attachments/assets/d52c5df6-7e8e-408a-8d30-23f5411ab12d" width=50%>
+      <img src="https://github.com/user-attachments/assets/d52c5df6-7e8e-408a-8d30-23f5411ab12d" width=65%>
 
     
 - **전체 일정 조회 (등록된 일정 불러오기)**
@@ -82,25 +82,27 @@
     - [ ]  조회한 일정 목록에는 `작성자 이름`이 포함
     - [ ]  범위를 넘어선 페이지를 요청하는 경우 빈 배열을 반환
 
-💬localhost:8080/schedules/page?pageNum=0&pageSize=10 으로 요청 <br>
-요청사항 없으면 기본 pageNum=0, pageSize=5로 설정함 <br>
+💬`localhost:8080/schedules/page?pageNum=0&pageSize=10` 으로 요청 <br>
+요청사항 없으면 기본 `pageNum=0, pageSize=5`로 설정함 <br>
 
 
 ***
 
 ### 5️⃣LV.5 예외 발생 처리
-- [ ]  예외 상황에 대한 처리를 위해 [`HTTP 상태 코드(링크)`](https://developer.mozilla.org/ko/docs/Web/HTTP/Status)와 `에러 메시지`를 포함한 정보를 사용하여 예외를 관리할 수 있습니다.
-      1. 필요에 따라 사용자 정의 예외 클래스를 생성하여 예외 처리를 수행할 수 있습니다.
-      2. `@ExceptionHandler`를 활용하여 공통 예외 처리를 구현할 수도 있습니다.
-      3. 예외가 발생할 경우 적절한 HTTP 상태 코드와 함께 사용자에게 메시지를 전달하여 상황을 관리합니다.
+- 예외 상황에 대한 처리를 위해 [`HTTP 상태 코드(링크)`](https://developer.mozilla.org/ko/docs/Web/HTTP/Status)와 `에러 메시지`를 포함한 정보를 사용하여 예외를 관리할 수 있습니다.
+    1. 필요에 따라 사용자 정의 예외 클래스를 생성하여 예외 처리를 수행할 수 있습니다.
+    2. `@ExceptionHandler`를 활용하여 공통 예외 처리를 구현할 수도 있습니다.
+    3. 예외가 발생할 경우 적절한 HTTP 상태 코드와 함께 사용자에게 메시지를 전달하여 상황을 관리합니다.
+    
+- [ ]  수정, 삭제 시 요청할 때 보내는 `비밀번호`가 일치하지 않을 때 예외가 발생
+- [ ]  선택한 일정 정보를 조회할 수 없을 때 예외가 발생
+    1.   잘못된 정보로 조회하려고 할 때
+    2. 이미 삭제된 정보를 조회하려고 할 때
 
-      - [ ]  수정, 삭제 시 요청할 때 보내는 `비밀번호`가 일치하지 않을 때 예외가 발생합니다.
-      - [ ]  선택한 일정 정보를 조회할 수 없을 때 예외가 발생합니다.
-          1. 잘못된 정보로 조회하려고 할 때
-          2. 이미 삭제된 정보를 조회하려고 할 때
+##### <일정 삭제 시 비밀번호 불일치>
+<img src="https://github.com/user-attachments/assets/8529db49-40ed-462d-b3ea-b4ab7387ee42" width=65%>
+
 ***
-
-
 
 ### 6️⃣ Lv.6 null 체크 및 특정 패턴에 대한 검증 수행
 - 유효성 검사
@@ -111,14 +113,14 @@
     - [ ]  `할일`은 최대 200자 이내로 제한, 필수값 처리
     - [ ]  `비밀번호`는 필수값 처리
     - [ ]  담당자의 `이메일` 정보가 형식에 맞는지 확인
-![image](https://github.com/user-attachments/assets/46e24c79-0d4e-4855-bd0f-6795c73e7e84)
+  
+##### <이메일 형식 검증>
+<img src="https://github.com/user-attachments/assets/46e24c79-0d4e-4855-bd0f-6795c73e7e84" width=65%>
+
+##### <할일 200자 검증>
+<img src="https://github.com/user-attachments/assets/4ff819a3-b8fb-4836-801a-9096371c2735" width=65%>
+
+##### <비밀번호 필수값 처리>
+<img src="https://github.com/user-attachments/assets/ba7d0d4d-55b7-4395-8b37-2e42c02a2973" width=65%>
 
 
-***
-
-## 🪄 주요 코드 구현 설명
-
-##### * 모든 기능 구현 완료
-
-
-***
