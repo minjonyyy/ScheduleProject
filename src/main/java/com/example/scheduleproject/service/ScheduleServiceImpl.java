@@ -66,6 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         Schedule existingSchedule = scheduleRepo.findScheduleByIdOrElseThrow(id);
 
+        //비밀번호 일치하는지 확인하는 로직
         if(confirmPW.equals(existingSchedule.getPassword())) {
             int updatedRow = scheduleRepo.updateSchedule(id, title, task, username);
             if (updatedRow == 0) {

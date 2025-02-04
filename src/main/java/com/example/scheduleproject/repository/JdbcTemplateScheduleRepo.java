@@ -113,7 +113,7 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
             sql += " AND user_id = ?";
             params.add(userId);
         }
-        sql += " order by modified_at desc";
+        sql += " order by modified_at desc"; //수정일 기준 내림차순
 
         return jdbcTemplate.query(sql, scheduleRowMapper(), params.toArray());
     }
@@ -122,8 +122,8 @@ public class JdbcTemplateScheduleRepo implements ScheduleRepo{
     public List<ScheduleListResponseDto> findScheduleWithPage(int pageNum, int pageSize) {
         String countSql = "SELECT COUNT(*) FROM schedules"; // 일정 갯수 세기
         int totalCount = jdbcTemplate.queryForObject(countSql, Integer.class);
-        if (totalCount == 0 || pageNum * pageSize >= totalCount){
-            return Collections.emptyList();
+        if (totalCount == 0 || pageNum * pageSize >= totalCount){ // 만약 일정이 아예 없거나, 범위를 넘어선 페이지를 요청하는 경우
+            return Collections.emptyList(); //빈 배열 반환
         }
 
         String sql = "SELECT * FROM schedules ORDER BY modified_at DESC LIMIT ? OFFSET ?";

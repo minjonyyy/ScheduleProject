@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 
+// 할일 목록 반환하는 Dto (미리보기)
 @Getter
 @AllArgsConstructor
 public class ScheduleListResponseDto {
