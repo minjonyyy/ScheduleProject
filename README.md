@@ -5,16 +5,39 @@
 ## 📍필수 기능
 ### 단계별 요구사항
 ### LV.0 API 명세 및 ERD 작성
-1. API 명세서
+**1. API 명세서**
+
+https://documenter.getpostman.com/view/41327981/2sAYX5Kha8
+
+**2. ERD**
+
+  <img src="https://github.com/user-attachments/assets/13456d1a-2206-4823-b9e3-6942b97794b0" width=65%>
 
 
-2. ERD
+**3. SQL 쿼리 작성하기**
+
+```sql
+CREATE TABLE users (
+    user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_name VARCHAR(255),
+    user_email VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE schedules (
+    schedule_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(200),
+    task VARCHAR(200),
+    username VARCHAR(10),
+    user_email VARCHAR(255),
+    password VARCHAR(20),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modified_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    user_id BIGINT,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
+```
 
 
-3. SQL
-
-
-💬
 ***
 
 
