@@ -5,6 +5,7 @@ import com.example.scheduleproject.dto.ScheduleRequestDto;
 import com.example.scheduleproject.dto.ScheduleResponseDto;
 import com.example.scheduleproject.entity.Schedule;
 import com.example.scheduleproject.service.ScheduleService;
+import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class scheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@Valid @RequestBody ScheduleRequestDto dto) {
 
         return new ResponseEntity<>(scheduleService.saveSchedule(dto), HttpStatus.CREATED);
     }
