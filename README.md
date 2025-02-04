@@ -51,12 +51,16 @@
         - [ ]  서버에 일정 수정을 요청할 때 `비밀번호`를 함께 전달합니다.
         - [ ]  `작성일` 은 변경할 수 없으며, `수정일` 은 수정 완료 시, 수정한 시점으로 변경합니다.
     - `updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto dto)`
+      <img src="https://github.com/user-attachments/assets/737fdd3a-7488-4790-aaa9-e3e30f3fbb5f" width=65%>
+
 
 
 - **선택한 일정 삭제**
     - [ ]  선택한 일정을 삭제할 수 있습니다.
         - [ ]  서버에 일정 수정을 요청할 때 `비밀번호`를 함께 전달합니다.
     - `deleteScheduleById(@PathVariable Long id, @RequestBody ScheduleRequestDto dto)`
+      <img src="https://github.com/user-attachments/assets/3698caf4-2e4b-41da-bfbc-bcd83e174165" width=65%>
+
 
 
 ***
@@ -72,6 +76,9 @@
 💬 할 일 생성 시, `이메일`을 식별자로 하여 `기존 userId`가 존재하는지 확인함. <br>
    userId가 존재하지 않는다면 user테이블에 새로운 데이터를 추가함. <br>
    작성자의 고유 식별자(userId)를 통해 일정을 검색할 수 있도록 `findSchedulesWithFilters()`의 조건 수정.
+   
+##### <users 데이터베이스>
+<img src="https://github.com/user-attachments/assets/4c2bbcae-28f7-45bb-a644-38995de8c0ad" width=50%>
 
 ***
 
@@ -84,7 +91,7 @@
 
 💬`localhost:8080/schedules/page?pageNum=0&pageSize=10` 으로 요청 <br>
 요청사항 없으면 기본 `pageNum=0, pageSize=5`로 설정함 <br>
-
+<img src="https://github.com/user-attachments/assets/89421868-643d-4fba-a202-34c77ce931d4" width=60%>
 
 ***
 
